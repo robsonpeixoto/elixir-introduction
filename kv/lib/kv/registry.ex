@@ -43,9 +43,10 @@ defmodule KV.Registry do
     {:reply, Map.fetch(names, name), state}
   end
 
+  # TODO: use `handle_call`
   def handle_cast({:create, name}, {names, refs}) do
     if Map.has_key?(names, name) do
-      {:noreply, names}
+      {:noreply, {names, refs}}
     else
       {:ok, pid} = KV.Bucket.start_link([])
       ref = Process.monitor(pid)
